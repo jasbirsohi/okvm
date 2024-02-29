@@ -1,0 +1,59 @@
+# Document Started on 02292024
+# Document version 0.1
+
+# Reference Oracle Document
+# https://docs.oracle.com/en/virtualization/oracle-linux-virtualization-manager/admin/admin-admin-tasks.html#nfs-data-prep-top
+
+# NFS Allocation methods to mount as Data Directory for Oracle KVM 4.5
+# Using NFS Storage
+# Before preparing the NFS share, ensure your environment meets the following conditions:
+
+# Ensure that the Manager and KVM host installation are running the Oracle Linux 8.8 or later in an environment with two or more servers where one acts as the Manager host and the other servers act as KVM hosts.
+
+# The installation creates a vdsm:kvm (36:36) user and group in the /etc/passwd and /etc/group directories, respectively.
+
+grep vdsm /etc/passwd
+vdsm:x:36:36:Node Virtualization Manager:/:/sbin/nologin
+
+grep kvm /etc/group
+kvm:x:36:qemu,sanlock
+
+# An Oracle Linux NFS File server that is reachable by your virtualization environment
+
+# To prepare NFS storage
+
+# On a Linux fileserver that has access to the virtualization environment, create a directory that is to be used for the data domain.
+
+mkdir -p /nfs/olv_ovirt/data
+
+# Set the required permissions on the new directory to allow read-write access to the vdsm user (UID 36) and kvmgroup (GID 36)
+
+chown -R 36:36 /nfs/olv_ovirt
+chmod -R 0755 /nfs/olv_ovirt
+
+# Add an entry for the newly created NFS share in the /etc/exports directory on the NFS file server that uses the following format: full-path-of-share-created *(rw,sync,no_subtree_check,all_squash,anonuid=36,anongid=36)
+
+# vi /etc/exports
+# added the following entry
+/nfs/olv_ovirt/data *(rw,sync,no_subtree_check,all_squash,anonuid=36,anongid=36)
+
+# Verify that the entry has been added
+
+# grep "/nfs/olv_ovirt/data" /etc/exports
+/nfs/ol_ovirt/data *(rw,sync,no_subtree_check,all_squash,anonuid=36,anongid=36)
+
+# If you do not want to export the domain share to all servers on the network (denoted by the * before the left parenthesis), you can specify each individual host in your virtualization environment by using the following format: /nfs/ol_ovirt/data hostname-or-ip-address (rw,sync,no_subtree_check,all_squash,anonuid=36,anongid=36)
+
+# For example:
+
+/nfs/olv_ovirt/data hostname-or-ip-address (rw,sync,no_subtree_check,all_squash,anonuid=36,anongid=36)
+
+# Export the NFS share
+
+# exportfs -rv
+
+# Confirm that the added export is available to Oracle Linux Virtualization Manager hosts by using the following showmount commands on the NFS File Server
+
+# showmount -e | grep pathname-to-domain-share-added
+# showmount -e | grep ip-address-of-host
+

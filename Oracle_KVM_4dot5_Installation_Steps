@@ -1,6 +1,6 @@
 # Document Version 1.0
 
-# Steps to Configure Oracle KVM or OLVM (Oracle Linux Virtualization Manager)
+# Steps to Configure Oracle KVM or OLVM (Oracle Linux Virtualization Manager) - StandAlone KVM Manager
 
 # We need DNS or Alias Entries for All Hosts that will act as Hypervisor and KVM Manager
 
@@ -11,7 +11,6 @@ sudo hostnamectl set-hostname "kvm02.13infotech.com"
 sudo hostnamectl set-hostname "kvmmgr.13infotech.com"
 
 # Sample for /etc/hosts on all nodes
-# 
 
 sudo vi /etc/hosts
 
@@ -49,7 +48,7 @@ ol8_gluster_appstream
 dnf config-manager --enable repository
 
 # Activate the Cockpit web console and open the firewall port
-sudo yum install cockpit cockpit-dashboard
+sudo yum install cockpit cockpit-dashboard -y
 systemctl enable --now cockpit.socket
 firewall-cmd --permanent --zone=public --add-service=cockpit
 firewall-cmd --reload           
@@ -80,7 +79,9 @@ ovirt-4.5-extra
 
 ol8_gluster_appstream
 
-(For VDSM) ol8_UEKR7
+(For VDSM) ol8_UEKR7 
+# You will see (For VDSM) ol8_UEKR6 if you are not using ULN method but using Yum Repo Method
+
 
 # Install the Manager using the ovirt-engine command
 dnf install ovirt-engine
