@@ -100,3 +100,7 @@ Please use the user 'admin@internal' and password specified in order to login
               https://kvmmgr.13infotech.com/ovirt-engine-grafana/
           Please run the following command on the engine machine kvmmgr.13infotech.com, for SSO to work:
           systemctl restart ovirt-engine
+
+
+# https://docs.oracle.com/en/operating-systems/oracle-linux/cockpit/cockpit-kvm_install_the_cockpit_virtual_machines_module.html#install-the-cockpit-virtual-machines-module
+

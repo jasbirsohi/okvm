@@ -1,0 +1,27 @@
+# Document Started on 02292024
+# Document version 0.1
+
+# Install Cockpit-Machines and Enable Virtualization
+
+# https://docs.oracle.com/en/operating-systems/oracle-linux/cockpit/cockpit-kvm_install_the_cockpit_virtual_machines_module.html#install-the-cockpit-virtual-machines-module
+
+
+# Install the Cockpit-Machines add-on application in the web console
+# Install the Virtualization base packages on the Cockpit host system
+
+# Note:The Virtualization base packages are typically installed on the host system during the Oracle Linux installation. In the case that these packages aren't installed, they must be installed to use the Virtual Machine module in the Cockpit web console.
+
+# Install the Cockpit Virtual Machine add-on application
+sudo dnf install cockpit-machines
+
+# For OEL8
+sudo dnf module install virt
+sudo dnf install virt-install virt-viewer
+
+# For OEL 9
+sudo dnf group install "Virtualization Host"
+sudo dnf install qemu-kvm virt-install virt-viewer
+
+# Verify that the Virtualization service is started on host system
+sudo virt-host-validate qemu
+

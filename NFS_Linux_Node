@@ -54,6 +54,57 @@ chmod -R 0755 /nfs/olv_ovirt
 
 # Confirm that the added export is available to Oracle Linux Virtualization Manager hosts by using the following showmount commands on the NFS File Server
 
+# Mount on OKVM Manager
+server.example.com:/nfs/olv_ovirt/data
+libvirt01.13infotech.com:/nfs/olv_ovirt/data
+
 # showmount -e | grep pathname-to-domain-share-added
 # showmount -e | grep ip-address-of-host
+
+
+
+# https://docs.oracle.com/en/learn/create_nfs_linux/#introduction
+
+# Install the NFS Utilities Package on the Server Instance
+sudo dnf install -y nfs-utils
+
+# To create a user named "vdsm" with a UID of 36 in Linux, you can use the following command:
+sudo useradd -u 36 vdsm
+
+# To create a group named "kvm" with a GID (Group ID) of 36 in Linux, you can use the following command:
+sudo groupadd -g 36 kvm
+
+
+sudo firewall-cmd --permanent --zone=public --add-service=nfs
+sudo firewall-cmd --reload
+sudo firewall-cmd --list-all
+
+
+# Enable and start the NFS service.
+sudo systemctl enable --now nfs-server
+showmount -e
+
+
+
+
+# If your NFS mount point is low on storage then you can redirect the mount point to other Storage Mount Point
+# Example /nfs/olv_ovirt/data is low space so I am redirecting to /home which has 2 TB Space.
+
+# To redirect a directory in Linux to use storage from another mount point, you can use the mount command with the --bind option. Here's how you can do it:
+
+sudo mount --bind /home /nfs/olv_ovirt/data
+
+# This command mounts the /home directory to /nfs/olv_ovirt/data, effectively redirecting the directory to use storage from the /home mount point. This redirection allows the /nfs/olv_ovirt/data directory to access and use the storage resources available at /home.
+
+# but after this you need to delete vdsm folder inside the /nfs/olv_ovirt/data or try to reassign the permissions
+
+chown -R 36:36 /nfs/olv_ovirt
+chmod -R 0755 /nfs/olv_ovirt
+
+# then try again the mount
+
+
+
+
+
 
