@@ -107,4 +107,57 @@ chmod -R 0755 /nfs/olv_ovirt
 
 
 
+grep vdsm /etc/passwd
+vdsm:x:36:36:Node Virtualization Manager:/:/sbin/nologin
+
+grep kvm /etc/group
+kvm:x:36:qemu,sanlock
+
+chown -R vdsm:kvm /var/tmp
+chmod -R 0755 /var/tmp
+
+
+
+https://www.ovirt.org/documentation/migrating_from_a_standalone_manager_to_a_self-hosted_engine/
+# Red Hat Enterprise Linux 8
+Prerequisites
+Install the NFS utils package.
+
+# dnf install nfs-utils -y
+To check the enabled versions:
+
+# cat /proc/fs/nfsd/versions
+Enable the following services:
+
+# systemctl enable nfs-server
+# systemctl enable rpcbind
+
+Procedure
+Create the group kvm:
+
+# groupadd kvm -g 36
+Create the user vdsm in the group kvm:
+
+# useradd vdsm -u 36 -g kvm
+Create the storage directory and modify the access rights.
+
+# mkdir /storage
+# chmod 0755 /storage
+# chown 36:36 /storage/
+Add the storage directory to /etc/exports with the relevant permissions.
+
+# vi /etc/exports
+# cat /etc/exports
+ /storage *(rw)
+Restart the following services:
+
+# systemctl restart rpcbind
+# systemctl restart nfs-server
+To see which export are available for a specific IP address:
+
+# exportfs
+ /nfs_server/srv
+               10.46.11.3/24
+ /nfs_server       <world>
+If changes in /etc/exports have been made after starting the services, the exportfs -ra command can be used to reload the changes. After performing all the above stages, the exports directory should be ready and can be tested on a different host to check that it is usable.
 
