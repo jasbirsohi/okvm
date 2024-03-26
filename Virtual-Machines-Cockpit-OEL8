@@ -151,3 +151,7 @@ sudo bridge link show
 sudo virsh domiflist 
 
 
+# https://serverfault.com/questions/840519/how-to-change-the-default-storage-pool-from-libvirt
+# https://docs.oracle.com/en/learn/ol-kvm/#create-virtual-machine-using-oracle-cloud-images
+
+
